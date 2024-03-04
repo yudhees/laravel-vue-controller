@@ -6,22 +6,24 @@ This is the  package helps you to access your controller within your vue file
      
 ## or
 
-Begin by installing this package through Composer. Edit your project's `composer.json` file to require `way/generators`.
+Begin by installing this package through Composer. Edit your project's `composer.json` file to require `yudhees/laravel-vue-controller`.
 
 	"require-dev": {
-		"yudhees/laravel-vue-controller": "1.0"
+	     "yudhees/laravel-vue-controller": "1.0"
 	}
 
 
 Next, update Composer from the Terminal:
 
     composer update 
+
 ## Laravel < 4
 Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
 
     'Yudhees\LaravelVueController\vuecontrollerserviceprovider'
 
 ## Note 
+
    if You are using Laravel > 4 The servie provider is auto discover then no neeed to register this provider 
 
 ## Usage
