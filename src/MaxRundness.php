@@ -1,7 +1,7 @@
 <?php
-namespace  controller;
+namespace Yudhees\LaravelVueController;
 
-class test {
+class MaxRundness {
     public function chat(){
         return "works";
     }
