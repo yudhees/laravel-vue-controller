@@ -39,15 +39,13 @@ Once this operation completes, the final step is to add the service provider. Op
   In Your `app.js` file simply add this
   
     import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'
-
-## Global
-
-```js
+ `app.js`
+  ```js
 //resources/js/app.js
     import './bootstrap'
     import { createApp, h } from 'vue'
     import { createInertiaApp } from '@inertiajs/vue3'
-     import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'  // add this compostable
+    import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'
       createInertiaApp({
        resolve: name => {
        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
@@ -56,19 +54,38 @@ Once this operation completes, the final step is to add the service provider. Op
         setup({ el, App, props, plugin }) {
        const app= createApp({ render: () => h(App, props) });
        app.use(plugin);
-       app.config.globalProperties.controller = controller; // register controller on global
        app.mount(el);
      },
     })
 ```
+# Global
+   Two Ways to Inject controller to vue conponnent
+   
+ ## Provie/Inject
+  ```js
+//resources/js/app.js
+  createInertiaApp({
+     ..........
+     app.provide('controller', controller) // register controller on global
+  })
+  ```
+ ## or
+ ## Global Properties 
+```js
+//resources/js/app.js
+    createInertiaApp({
+     ..........
+     app.config.globalProperties.controller = controller; // register controller on global
+     })
+```
+ 
 ## Controller Fucntion
 Controller Functions Accepts Two Argument The First Argument Represents Path of the Controller 
+`controller(controllerPath,functionname,params={})`
    >[!NOTE]
    > Default prefix path of the Controller is `App\Http\Controller`
 
-The Second Arument Represents  the method name
-
-## Examples
+## Example
  I Created a UserController using This Command
  
       php artisan make:controller UserController
@@ -150,7 +167,43 @@ class UserController extends Controller
 </template>
   ```
 ## Scripts
-## Option API
+## Composition api vue 3 (Provide/Inject)
+ ```js
+//resources/js/Pages/userlist.vue
+import { onMounted, ref, getCurrentInstance,inject } from 'vue'
+const controller=inject('controller') // inject the controller from the app
+const controllerPath = "UserController"
+         /*
+          If The  UserController is inside the  admin folder,
+          then the required Controller Path is admin/userController
+          */
+const users = ref([])
+ function toggleStatus(id) {
+     controller(controllerPath, 'status', {
+         userid: id,
+     }).then(() => {
+         alert('status changed');
+     })
+ }
+ onMounted(() => {
+     getUsers()
+ })
+ function deleteuser(id) {
+     controller(controllerPath, 'destroy', {
+         userid: id,
+     }).then(() => {
+         alert('User Deleted Successfully')
+         getUsers();
+     })
+ }
+ function getUsers() {
+     controller(controllerPath, 'users')
+         .then(response => {
+             users.value = response.data.users
+         })
+ }
+```
+## Option API (Global Properties)
 ```js
 //resources/js/Pages/userlist.vue
 export default {
@@ -191,42 +244,6 @@ export default {
         this.getUsers()
     }
     }
-```
-## Composition api vue 3
- ```js
-//resources/js/Pages/userlist.vue
-import { onMounted, ref, getCurrentInstance } from 'vue'
-const controllerPath = "UserController"
-         /*
-          If The  UserController is inside the  admin folder,
-          then the required Controller Path is admin/userController
-          */
-const users = ref([])
- function toggleStatus(id) {
-     controller(controllerPath, 'status', {
-         userid: id,
-     }).then(() => {
-         alert('status changed');
-     })
- }
- const controller=getCurrentInstance().appContext.config.globalProperties.controller // get controller on globalProperties
- onMounted(() => {
-     getUsers()
- })
- function deleteuser(id) {
-     controller(controllerPath, 'destroy', {
-         userid: id,
-     }).then(() => {
-         alert('User Deleted Successfully')
-         getUsers();
-     })
- }
- function getUsers() {
-     controller(controllerPath, 'users')
-         .then(response => {
-             users.value = response.data.users
-         })
- }
 ```
 ## Vendor Files
    `vuecontroller.php file`
