@@ -14,5 +14,8 @@
             "email": "yudees479@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "illuminate/support": "^10.46",
+        "illuminate/http": "^10.46"
+    }
 }
