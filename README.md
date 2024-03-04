@@ -1,5 +1,5 @@
 
-## laravel-vue-controller - To access your controller within your vue file 
+## laravel-vue-controller - To access your controller within a vue file 
 ## Installation
 
 ## composer 
@@ -42,7 +42,8 @@ Once this operation completes, the final step is to add the service provider. Op
 
 ## Global
 
-```js 
+```js
+//resources/js/app.js
     import './bootstrap'
     import { createApp, h } from 'vue'
     import { createInertiaApp } from '@inertiajs/vue3'
@@ -115,6 +116,7 @@ class UserController extends Controller
 ## Vue Template 
 `userslist.vue`
   ```html
+  <!-- resources/js/Pages/userlist.vue -->
   <template>
      <div class="table-responsive">
           <table class="table">
@@ -150,6 +152,7 @@ class UserController extends Controller
 ## Scripts
 ## Option API
 ```js
+//resources/js/Pages/userlist.vue
 export default {
     data() {
         return {
@@ -187,6 +190,7 @@ export default {
 ```
 ## Composition api vue 3
  ```js
+//resources/js/Pages/userlist.vue
 import { onMounted, ref, getCurrentInstance } from 'vue'
 const controllerPath = "UserController"
 const users = ref([])
@@ -219,27 +223,23 @@ const users = ref([])
 ## Vendor Files
    `vuecontroller.php file`
  ```php
-  <?php
-
-namespace App\Http\Controllers;
+ <?php
+namespace Yudhees\LaravelVueController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
-
-class vuecontroller extends Controller
-{
-    public function __invoke(Request $request, $controller,$method){
-
+class vuecontroller {
+    public function __invoke(Request $request,$controller,$method){
         $controller =  App::make("App\Http\Controllers\\{$controller}");
         if (!method_exists($controller, $method)) {
             return Response::json(['error' => 'Function does not exist'], 404);
         }
         $params=$request->all();
          return call_user_func_array([$controller, $method], $params);
-
     }
 }
+
 ```
 ## License
 
