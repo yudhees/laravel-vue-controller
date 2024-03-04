@@ -1,7 +1,12 @@
 import axios from 'axios'
-export const controller=(controller,func,data={})=>{
+const url=import.meta.env.VITE_APP_URL+'vuecontroller';
+export const controller=(controller,func,params={})=>{
     try {
-     return axios.post(`/vuecontroller/${controller}/${func}`,data);
+    const data={};
+     data.controller=controller.replaceAll('/','\\');
+     data.function=func;
+     data.params=params;
+     return axios.post(url,data);
     } catch (error) {
         console.error(error)
     }

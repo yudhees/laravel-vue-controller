@@ -29,7 +29,7 @@ Once this operation completes, the final step is to add the service provider. Op
 ## Note 
   The service Provider Contains the Default Route , Be Sure that This Route is not registered in any of your route file
   
-    Route::post('/vuecontroller/{controller}/{method}',vuecontroller::class)->name('vuecontroller');
+    Route::post('/vuecontroller',vuecontroller::class)->name('vuecontroller');
 
 ## Usage
    
@@ -157,7 +157,11 @@ export default {
     data() {
         return {
             users: [],
-            controllerPath: "UserController",
+            controllerPath: "UserController", 
+            /*
+            If The  UserController is inside the admin folder,
+            then the required Controller Path is admin/userController
+            */
         }
     },
     methods: {
@@ -193,6 +197,10 @@ export default {
 //resources/js/Pages/userlist.vue
 import { onMounted, ref, getCurrentInstance } from 'vue'
 const controllerPath = "UserController"
+         /*
+          If The  UserController is inside the  admin folder,
+          then the required Controller Path is admin/userController
+          */
 const users = ref([])
  function toggleStatus(id) {
      controller(controllerPath, 'status', {

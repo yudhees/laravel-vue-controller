@@ -12,6 +12,6 @@ class vuecontrollerserviceprovider extends ServiceProvider{
 
     protected function registerRoutes()
     {
-        Route::post('/vuecontroller/{controller}/{method}',vuecontroller::class)->name('vuecontroller');
+        Route::post('/vuecontroller',vuecontroller::class)->name('vuecontroller');
     }   
 }
