@@ -17,5 +17,12 @@
     "require": {
         "illuminate/support": "^10.46",
         "illuminate/http": "^10.46"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Yudhees\\LaravelVueController\\vuecontrollerserviceprovider"
+            ]
+        }
     }
 }
