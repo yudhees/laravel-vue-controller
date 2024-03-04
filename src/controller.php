@@ -1,7 +1,7 @@
 <?php
+namespace  controller;
 
-
-class test{
+class test {
     public function chat(){
         return "works";
     }
