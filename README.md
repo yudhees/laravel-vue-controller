@@ -17,28 +17,37 @@ Next, update Composer from the Terminal:
 
     composer update 
 
-## Laravel < 4
-Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
-
-    'Yudhees\LaravelVueController\vuecontrollerserviceprovider'
-
 ## Note 
 
    if You are using Laravel > 4 The servie provider is auto discover then no neeed to register this provider 
+   
+## Laravel < 4
+Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
+
+    Yudhees\LaravelVueController\vuecontrollerserviceprovider::class
 
 ## Usage
 
-Think of generators as an easy way to speed up your workflow. Rather than opening the models directory, creating a new file, saving it, and adding the class, you can simply run a single generate command.
+  In Your `app.js` file simply add this ` import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'`
+  
+    import './bootstrap'
+    import { createApp, h } from 'vue'
+    import { createInertiaApp } from '@inertiajs/vue3'
+    import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'
+    createInertiaApp({
+    resolve: name => {
+    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+    return pages[`./Pages/${name}.vue`]
+    },
+    setup({ el, App, props, plugin }) {
+    const app= createApp({ render: () => h(App, props) });
+    app.use(plugin);
+    app.config.globalProperties.controller = controller;
+    app.mount(el);
+    },
+    })
 
-- [Migrations](#migrations)
-- [Models](#models)
-- [Views](#views)
-- [Seeds](#seeds)
-- [Pivot](#pivot)
-- [Resources](#resources)
-- [Scaffolding](#scaffolding)
-- [Configuration](#configuration)
-
+  
 ### Migrations
 
 Laravel offers a migration generator, but it stops just short of creating the schema (or the fields for the table). Let's review a couple examples, using `generate:migration`.
