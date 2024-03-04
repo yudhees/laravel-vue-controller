@@ -1,33 +1,28 @@
 This is the  package helps you to access your controller within your vue file 
 ## Installation
 
-> [Want a 5-minute video overview?](https://dl.dropboxusercontent.com/u/774859/Work/Laravel-4-Generators/Get-Started-With-Laravel-Custom-Generators.mp4)
-
-
-## Laravel 5
-
-If you're using Laravel 5, then [use this package instead](https://github.com/laracasts/Laravel-5-Generators-Extended).
-
-## Laravel 4.2 and Below
+## composer 
+     composer require yudhees/laravel-vue-controller
+     
+## or
 
 Begin by installing this package through Composer. Edit your project's `composer.json` file to require `way/generators`.
 
 	"require-dev": {
-		"way/generators": "~2.0"
+		"yudhees/laravel-vue-controller": "1.0"
 	}
 
 
 Next, update Composer from the Terminal:
 
-    composer update --dev
-
+    composer update 
+## Laravel < 4
 Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
 
-    'Way\Generators\GeneratorsServiceProvider'
+    'Yudhees\LaravelVueController\vuecontrollerserviceprovider'
 
-That's it! You're all set to go. Run the `artisan` command from the Terminal to see the new `generate` commands.
-
-    php artisan
+## Note 
+   if You are using Laravel > 4 The servie provider is auto discover then no neeed to register this provider 
 
 ## Usage
 
