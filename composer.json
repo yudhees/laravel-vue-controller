@@ -1,6 +1,6 @@
 {
     "name": "yudhees/laravel-vue-controller",
-    "description": "Use laravel controller inside vue",
+    "description": "To Access Laravel Controller Inside a vue file",
     "type": "library",
     "license": "MIT",
     "autoload": {
