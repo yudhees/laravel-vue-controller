@@ -241,3 +241,6 @@ class vuecontroller extends Controller
     }
 }
 ```
+## License
+
+laravel-vue-controller is open-source software released under the MIT license. See [LICENSE](LICENSE) for more information.
