@@ -1,5 +1,5 @@
 
-## laravel-vue-controller - To access your controller within your vue file 
+## laravel-vue-controller - To access your controller within a vue file 
 ## Installation
 
 ## composer 
@@ -42,7 +42,8 @@ Once this operation completes, the final step is to add the service provider. Op
 
 ## Global
 
-```js 
+```js
+//resources/js/app.js
     import './bootstrap'
     import { createApp, h } from 'vue'
     import { createInertiaApp } from '@inertiajs/vue3'
@@ -115,6 +116,7 @@ class UserController extends Controller
 ## Vue Template 
 `userslist.vue`
   ```html
+  <!-- resources/js/Pages/userlist.vue -->
   <template>
      <div class="table-responsive">
           <table class="table">
@@ -150,6 +152,7 @@ class UserController extends Controller
 ## Scripts
 ## Option API
 ```js
+//resources/js/Pages/userlist.vue
 export default {
     data() {
         return {
@@ -187,6 +190,7 @@ export default {
 ```
 ## Composition api vue 3
  ```js
+//resources/js/Pages/userlist.vue
 import { onMounted, ref, getCurrentInstance } from 'vue'
 const controllerPath = "UserController"
 const users = ref([])
