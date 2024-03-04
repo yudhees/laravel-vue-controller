@@ -1,4 +1,6 @@
-This is the  package helps you to access your controller within your vue file 
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+## laravel-vue-controller - To access your controller within your vue file 
 ## Installation
 
 ## composer 
@@ -19,7 +21,7 @@ Next, update Composer from the Terminal:
 
 ## Note 
 
-   if You are using Laravel > 4 The servie provider is auto discover then no neeed to register this provider 
+   if You are using Laravel > 4 Skip the below step because The servie provider is auto discover then no neeed to register this provider 
    
 ## Laravel < 4
 Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
@@ -27,24 +29,29 @@ Once this operation completes, the final step is to add the service provider. Op
     Yudhees\LaravelVueController\vuecontrollerserviceprovider::class
 
 ## Usage
-
+   
+   ## Note
+   
+       In This Example I am using Inertia.js
+       
   In Your `app.js` file simply add this ` import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'`
   
     import './bootstrap'
     import { createApp, h } from 'vue'
     import { createInertiaApp } from '@inertiajs/vue3'
+    ```diff
     import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'
-    createInertiaApp({
-    resolve: name => {
-    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
-    return pages[`./Pages/${name}.vue`]
-    },
-    setup({ el, App, props, plugin }) {
-    const app= createApp({ render: () => h(App, props) });
-    app.use(plugin);
-    app.config.globalProperties.controller = controller;
-    app.mount(el);
-    },
+      createInertiaApp({
+       resolve: name => {
+       const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+        return pages[`./Pages/${name}.vue`]
+       },
+        setup({ el, App, props, plugin }) {
+       const app= createApp({ render: () => h(App, props) });
+       app.use(plugin);
+       `` app.config.globalProperties.controller = controller;``
+       app.mount(el);
+     },
     })
 
   
