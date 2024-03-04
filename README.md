@@ -1,5 +1,8 @@
 
 ## laravel-vue-controller - To access your controller within a vue file 
+> [!NOTE] 
+> Welcome To laravel-vue-controller , I request you to read the below documentation clearly 
+
 ## Installation
 
 ## composer 
@@ -59,14 +62,14 @@ Once this operation completes, the final step is to add the service provider. Op
     })
 ```
 # Global
-   Two Ways to Inject controller to vue conponnent
+   Two Ways to Inject controller function to vue Components
    
  ## Provie/Inject
   ```js
 //resources/js/app.js
   createInertiaApp({
      ..........
-     app.provide('controller', controller) // register controller on global
+     app.provide('controller', controller) // register controller as a provide
   })
   ```
  ## or
@@ -75,12 +78,12 @@ Once this operation completes, the final step is to add the service provider. Op
 //resources/js/app.js
     createInertiaApp({
      ..........
-     app.config.globalProperties.controller = controller; // register controller on global
+     app.config.globalProperties.controller = controller; // register controller as a  global
      })
 ```
  
 ## Controller Fucntion
-Controller Functions Accepts Two Argument The First Argument Represents Path of the Controller 
+Controller Function Accepts Two Arguments The First Argument Represents Path of the Controller 
 `controller(controllerPath,functionname,params={})`
    >[!NOTE]
    > Default prefix path of the Controller is `App\Http\Controller`
