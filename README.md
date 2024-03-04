@@ -1,4 +1,3 @@
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## laravel-vue-controller - To access your controller within your vue file 
 ## Installation
@@ -19,28 +18,35 @@ Next, update Composer from the Terminal:
 
     composer update 
 
-## Note 
+> [!NOTE]  
+> if You are using Laravel > 4 Skip the below step because The servie provider is auto discover then no neeed to register this provider 
 
-   if You are using Laravel > 4 Skip the below step because The servie provider is auto discover then no neeed to register this provider 
-   
 ## Laravel < 4
 Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
 
     Yudhees\LaravelVueController\vuecontrollerserviceprovider::class
 
+## Note 
+  The service Provider Contains the Default Route , Be Sure that This Route is not registered in any of your route file
+  
+    Route::post('/vuecontroller/{controller}/{method}',vuecontroller::class)->name('vuecontroller');
+
 ## Usage
    
-   ## Note
-   
-       In This Example I am using Inertia.js
+ > [!NOTE] 
+> In This Example I am using Inertia.js
        
-  In Your `app.js` file simply add this ` import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'`
+  In Your `app.js` file simply add this
   
+    import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'
+
+## Global
+
+```js 
     import './bootstrap'
     import { createApp, h } from 'vue'
     import { createInertiaApp } from '@inertiajs/vue3'
-    ```diff
-    import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'
+     import {controller} from '../../vendor/yudhees/laravel-vue-controller/compostables/global.js'  // add this compostable
       createInertiaApp({
        resolve: name => {
        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
@@ -49,150 +55,189 @@ Once this operation completes, the final step is to add the service provider. Op
         setup({ el, App, props, plugin }) {
        const app= createApp({ render: () => h(App, props) });
        app.use(plugin);
-       `` app.config.globalProperties.controller = controller;``
+       app.config.globalProperties.controller = controller; // register controller on global
        app.mount(el);
      },
     })
+```
+## Controller Fucntion
+Controller Functions Accepts Two Argument The First Argument Represents Path of the Controller 
+   >[!NOTE]
+   > Default prefix path of the Controller is `App\Http\Controller`
 
-  
-### Migrations
+The Second Arument Represents  the method name
 
-Laravel offers a migration generator, but it stops just short of creating the schema (or the fields for the table). Let's review a couple examples, using `generate:migration`.
+## Examples
+ I Created a UserController using This Command
+ 
+      php artisan make:controller UserController
+The Example `UserController` is Look Like this
+ ```php
+ <?php
 
-    php artisan generate:migration create_posts_table
+namespace App\Http\Controllers;
 
-If we don't specify the `fields` option, the following file will be created within `app/database/migrations`.
+use App\Models\User;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-```php
-<?php
+class UserController extends Controller
+{
+    public function users(){
+        return response(['users'=> User::all()]); // get all users
+    }
+    public function userlist(){
+        return Inertia::render('userslist'); //render user list table
+    }
+    public function status($userid){ // change the status of the user 
+       try {
+         $user = User::find($userid);
+         if($user->status)
+          $user->update(['status'=> 0]);
+          else
+          $user->update(['status'=> 1]);
+       } catch (\Throwable $th) {
+        dd($th);
+       }
+    }
+    public function  destroy($userid){ // destroy the user 
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-
-class CreatePostsTable extends Migration {
-
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-        Schema::create('posts', function(Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-        });
-	}
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-	    Schema::drop('posts');
-	}
-
+    try {
+         User::destroy($userid);
+    }
+    catch (\Throwable $th) {
+        dd($th);
+    }
+   }
 }
 
 ```
+## Vue Template 
+`userslist.vue`
+  ```html
+  <template>
+     <div class="table-responsive">
+          <table class="table">
+                <thead>
+                    <tr>
+                        <th>SI.NO</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="user, index in users" :key="user.id">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" :checked="user.status"
+                                    @change="toggleStatus(user.id)" />
+                            </div>
 
-Notice that the generator is smart enough to detect that you're trying to create a table. When naming your migrations, make them as descriptive as possible. The migration generator will detect the first word in your migration name and do its best to determine how to proceed. As such, for `create_posts_table`, the keyword is "create," which means that we should prepare the necessary schema to create a table.
-
-If you instead use a migration name along the lines of `add_user_id_to_posts_table`, in that case, the keyword is "add," signaling that we intend to add rows to an existing table. Let's see what that generates.
-
-    php artisan generate:migration add_user_id_to_posts_table
-
-This will prepare the following boilerplate:
-
-```php
-<?php
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-
-class AddUserIdToPostsTable extends Migration {
-
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-        Schema::table('posts', function(Blueprint $table) {
-
-        });
-	}
-
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-	    Schema::table('posts', function(Blueprint $table) {
-
-        });
-	}
-
-}
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" @click="deleteuser(user.id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</template>
+  ```
+## Scripts
+## Option API
+```js
+export default {
+    data() {
+        return {
+            users: [],
+            controllerPath: "UserController",
+        }
+    },
+    methods: {
+        getUsers() {
+            this.controller(this.controllerPath, 'users')
+                .then(response => {
+                    this.users = response.data.users
+                })
+        },
+        deleteuser(id) {
+            this.controller(this.controllerPath, 'destroy', {
+                userid: id,     // passing userid as a params to the usercontroller destroy method
+            }).then(() => {
+                alert('User Deleted Successfully')
+                this.getUsers();
+            })
+        },
+        toggleStatus(id) {
+            this.controller(this.controllerPath, 'status', {
+                userid: id,  // passing userid as a params to the usercontroller status method
+            }).then(() => {
+                alert('status changed');
+            })
+        }
+    },
+    mounted() {
+        this.getUsers()
+    }
+    }
 ```
+## Compostiton api vue 3
+ ```js
+import { onMounted, ref, getCurrentInstance } from 'vue'
+const controllerPath = "UserController"
+const users = ref([])
+ function toggleStatus(id) {
+     controller(controllerPath, 'status', {
+         userid: id,
+     }).then(() => {
+         alert('status changed');
+     })
+ }
+ const controller=getCurrentInstance().appContext.config.globalProperties.controller // get controller on globalProperties
+ onMounted(() => {
+     getUsers()
+ })
+ function deleteuser(id) {
+     controller(controllerPath, 'destroy', {
+         userid: id,
+     }).then(() => {
+         alert('User Deleted Successfully')
+         getUsers();
+     })
+ }
+ function getUsers() {
+     controller(controllerPath, 'users')
+         .then(response => {
+             users.value = response.data.users
+         })
+ }
+```
+## Vendor Files
+   `vuecontroller.php file`
+ ```php
+  <?php
 
-Notice how, this time, we're not doing `Schema::create`.
+namespace App\Http\Controllers;
 
-#### Keywords
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
 
-When writing migration names, use the following keywords to provide hints for the generator.
+class vuecontroller extends Controller
+{
+    public function __invoke(Request $request, $controller,$method){
 
-- `create` or `make` (`create_users_table`)
-- `add` or `insert` (`add_user_id_to_posts_table`)
-- `remove` (`remove_user_id_from_posts_table`)
-- `delete` or `drop` (`delete_users_table`)
+        $controller =  App::make("App\Http\Controllers\\{$controller}");
+        if (!method_exists($controller, $method)) {
+            return Response::json(['error' => 'Function does not exist'], 404);
+        }
+        $params=$request->all();
+         return call_user_func_array([$controller, $method], $params);
 
-#### Generating Schema
-
-This is pretty nice, but let's take things a step further and also generate the schema, using the `fields` option.
-
-    php artisan generate:migration create_posts_table --fields="title:string, body:text"
-
-Before we decipher this new option, let's see the output:
-
-```php
-<?php
-
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-
-class CreatePostsTable extends Migration {
-
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-        Schema::create('posts', function(Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-			$table->text('body');
-			$table->timestamps();
-        });
-	}
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-	    Schema::drop('posts');
-	}
-
+    }
 }
 ```
