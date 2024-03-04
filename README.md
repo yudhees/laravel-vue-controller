@@ -185,7 +185,7 @@ export default {
     }
     }
 ```
-## Compostiton api vue 3
+## Composition api vue 3
  ```js
 import { onMounted, ref, getCurrentInstance } from 'vue'
 const controllerPath = "UserController"
