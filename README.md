@@ -5,7 +5,7 @@
 
 ## Installation
 
-## composer 
+## Composer 
      composer require yudhees/laravel-vue-controller
      
 ## or
@@ -13,7 +13,7 @@
 Begin by installing this package through Composer. Edit your project's `composer.json` file to require `yudhees/laravel-vue-controller`.
 
 	"require-dev": {
-	     "yudhees/laravel-vue-controller": "1.0"
+	     "yudhees/laravel-vue-controller": "1.5"
 	}
 
 
@@ -22,9 +22,9 @@ Next, update Composer from the Terminal:
     composer update 
 
 > [!NOTE]  
-> if You are using Laravel > 4 Skip the below step because The servie provider is auto discover then no neeed to register this provider 
+> if You are using Laravel > 4 Skip the below step because The service provider is auto discover then no need to register this provider 
 
-## Laravel < 4
+## Laravel <=4
 Once this operation completes, the final step is to add the service provider. Open `config/app.php`, and add a new item to the providers array.
 
     Yudhees\LaravelVueController\vuecontrollerserviceprovider::class
@@ -64,7 +64,7 @@ Once this operation completes, the final step is to add the service provider. Op
 # Global
    Two Ways to Inject controller function to vue Components
    
- ## Provie/Inject
+ ## Provide/Inject
   ```js
 //resources/js/app.js
   createInertiaApp({
@@ -251,23 +251,26 @@ export default {
 ## Vendor Files
    `vuecontroller.php file`
  ```php
- <?php
-namespace Yudhees\LaravelVueController;
+ namespace Yudhees\LaravelVueController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 class vuecontroller {
-    public function __invoke(Request $request,$controller,$method){
-        $controller =  App::make("App\Http\Controllers\\{$controller}");
-        if (!method_exists($controller, $method)) {
+    public function __invoke(Request $request){
+        $request->validate([
+            'controller'=>'required',
+            'function'=>'required',
+        ]);
+        $function=$request->function;
+        $controller =  App::make("App\Http\Controllers\\{$request->controller}");
+        if (!method_exists($controller, $function)) {
             return Response::json(['error' => 'Function does not exist'], 404);
         }
-        $params=$request->all();
-         return call_user_func_array([$controller, $method], $params);
+        $params=$request->params;
+         return call_user_func_array([$controller, $function], $params);
     }
 }
-
 ```
 ## License
 
