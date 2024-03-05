@@ -14,7 +14,7 @@
             "email": "yudees479@gmail.com"
         }
     ],
-    "version": "1.0",
+    "version": "1.5",
     "require": {
         "php": ">=4.0.0",
         "illuminate/support": "^10.46",
